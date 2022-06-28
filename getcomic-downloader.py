@@ -100,4 +100,5 @@ def getcomic_downloader(page, search):
 
 
 if __name__ == "__main__":
-    getcomic_downloader(99, quote("star wars"))
+    search_string = input("Enter search string to look for on getcomics.info: ")
+    getcomic_downloader(99, quote(search_string))
