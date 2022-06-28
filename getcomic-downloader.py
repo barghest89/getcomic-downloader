@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import argparse
 import re
 import json
 import os
@@ -11,7 +10,8 @@ url = "https://getcomics.info/page/{}/?s={}"
 links_dict = {}
 
 headers_dict = {
-    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,"
+              "application/signed-exchange;v=b3;q=0.9",
     "accept-language": "en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7,fr;q=0.6",
     "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"",
     "sec-ch-ua-mobile": "?0",
@@ -31,9 +31,9 @@ headers_dict2 = {
     "sec-fetch-dest": "script",
     "sec-fetch-mode": "cors",
     "sec-fetch-site": "cross-site",
-    "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36"
+    "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 "
+                  "Safari/537.36 "
 }
-
 
 
 def write_to_json(json_dict, filename):
@@ -56,7 +56,7 @@ def getcomic_downloader(page, search):
     download_none = False
     page_num = 1
     try:
-        while (page_num <= page):
+        while page_num <= page:
             print(page_num)
             r = requests.get(url.format(page_num, search), headers=headers_dict)
             if r.status_code == 404:
@@ -75,16 +75,17 @@ def getcomic_downloader(page, search):
                 if not download_button:
                     print("Could not download " + heading + ". Skipping.")
                     continue
-                link_re = re.compile(r"https:\/\/[a-zA-Z0-9.\/\%\-\=\+\:]*")
+                link_re = re.compile(r"https://[a-zA-Z0-9./%\-=+:]*")
                 link = link_re.search(download_button)
                 if not link:
                     print("Could not download " + heading + ". Skipping.")
-                elif (link and not download_none):
-                # print(link)
+                elif link and not download_none:
+                    # print(link)
                     links_dict[heading] = link
 
                     if not download_all:
-                        reply = input("Download comic {}? y/n/a/N  (a= download all and do not ask again, N = Download none but keep looking for comics)".format(heading))
+                        reply = input("Download comic {}? y/n/a/N  (a= download all and do not ask again, "
+                                      "N = Download none but keep looking for comics)".format(heading))
                         if reply == "a":
                             download_all = True
                         if reply == "N":
@@ -93,11 +94,9 @@ def getcomic_downloader(page, search):
                         if download_all or reply == "y":
                             download_file(link, heading)
 
-
             page_num += 1
     except KeyboardInterrupt:
         sys.exit(0)
-
 
 
 if __name__ == "__main__":
